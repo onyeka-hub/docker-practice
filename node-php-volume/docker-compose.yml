@@ -1,0 +1,28 @@
+# the version of the dockewr-compose file
+version: '3'
+
+# services which represent different containers
+# "family" is the name giving to the backend application which is node and express
+# which is one of the containers
+# the build key specifies where this container will look in other to build an image for
+# this runnig service (family container) by finding a dockerfile.
+# the volumes is used to map the directory on the host machine to the directory on the container
+# so that when you make changes in your local machine it will reflect on the container or the browser.
+services:
+  family: 
+    build: ./family
+    ports:
+      - 5000:80
+    volumes:
+      - ./family:/home/app
+
+# frontend php application the generates a server side html pages
+# this will make a call to our backend app, get the array of family and render it on the browser
+  php-family:
+    build: ./site
+    ports:
+      - 5002:80
+    depends_on:
+      - family
+    volumes:
+      - ./site:/home/php
